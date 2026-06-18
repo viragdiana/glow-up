@@ -27,6 +27,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // --- Application services ----------------------------------------------------
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<ISectionService, SectionService>();
+builder.Services.AddScoped<ICustomSectionService, CustomSectionService>();
 builder.Services.AddScoped<IAiContextService, AiContextService>();
 builder.Services.AddScoped<IAiChatService, AiChatService>();
 // Mock provider for now; swap for a real AI provider later without touching callers.

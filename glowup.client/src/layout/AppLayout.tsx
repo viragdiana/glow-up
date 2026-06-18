@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useOutletContext } from 'react-router-dom';
 import { api } from '../services/api';
 import type { Profile } from '../types/profile';
+import type { CustomSection } from '../types/customSection';
 import Sidebar from './Sidebar';
 import ProfileHeader from './ProfileHeader';
 
@@ -9,6 +10,8 @@ import ProfileHeader from './ProfileHeader';
 export interface LayoutContext {
   profile: Profile | null;
   refreshProfile: () => Promise<void>;
+  customSections: CustomSection[];
+  refreshCustomSections: () => Promise<void>;
 }
 
 export function useLayoutContext() {
@@ -17,6 +20,7 @@ export function useLayoutContext() {
 
 export default function AppLayout() {
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [customSections, setCustomSections] = useState<CustomSection[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,18 +36,37 @@ export default function AppLayout() {
     }
   }, []);
 
+  const loadCustomSections = useCallback(async () => {
+    try {
+      const data = await api.getCustomSections();
+      setCustomSections(data);
+    } catch {
+      // Sidebar custom list is non-critical; ignore load errors here.
+    }
+  }, []);
+
   useEffect(() => {
     void loadProfile();
-  }, [loadProfile]);
+    void loadCustomSections();
+  }, [loadProfile, loadCustomSections]);
 
   return (
     <div className="app-shell">
-      <Sidebar />
+      <Sidebar customSections={customSections} />
       <div className="app-main">
         <ProfileHeader profile={profile} loading={loading} />
         <main className="app-content">
           {error && <div className="banner banner-error">{error}</div>}
-          <Outlet context={{ profile, refreshProfile: loadProfile } satisfies LayoutContext} />
+          <Outlet
+            context={
+              {
+                profile,
+                refreshProfile: loadProfile,
+                customSections,
+                refreshCustomSections: loadCustomSections,
+              } satisfies LayoutContext
+            }
+          />
         </main>
       </div>
     </div>

@@ -407,6 +407,71 @@ a:hover {
 .btn-secondary:hover:not(:disabled) {
   background: var(--surface-2);
 }
+.btn-danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: 1px solid #f3c7cf;
+}
+.btn-danger:hover:not(:disabled) {
+  background: #fadce1;
+}
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+.btn-icon {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  width: 38px;
+  flex-shrink: 0;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-icon:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* Key/value custom fields editor */
+.section-fields-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.kv-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.kv-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr auto;
+  gap: 10px;
+  align-items: center;
+}
+.kv-row code,
+.muted code {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-size: 12.5px;
+}
+
+.form-actions-split {
+  justify-content: space-between;
+}
+
+/* Truncate long custom-section titles in the sidebar */
+.nav-item-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 /* ---------------- Banners / states ---------------- */
 .banner {

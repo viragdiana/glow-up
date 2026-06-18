@@ -1,10 +1,15 @@
 import { NavLink } from 'react-router-dom';
 import { SECTION_CONFIGS } from '../sectionConfig';
+import type { CustomSection } from '../types/customSection';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   isActive ? 'nav-item nav-item-active' : 'nav-item';
 
-export default function Sidebar() {
+interface SidebarProps {
+  customSections: CustomSection[];
+}
+
+export default function Sidebar({ customSections }: SidebarProps) {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
@@ -29,6 +34,22 @@ export default function Sidebar() {
             <span>{section.label}</span>
           </NavLink>
         ))}
+
+        <div className="sidebar-group-label">Custom Sections</div>
+        {customSections.map((section) => (
+          <NavLink
+            key={section.id}
+            to={`/custom-sections/${section.id}`}
+            className={navLinkClass}
+          >
+            <span className="nav-icon">✨</span>
+            <span className="nav-item-text">{section.title || 'Untitled'}</span>
+          </NavLink>
+        ))}
+        <NavLink to="/custom-sections/new" className={navLinkClass}>
+          <span className="nav-icon">＋</span>
+          <span>Add Section</span>
+        </NavLink>
 
         <div className="sidebar-group-label">Insights</div>
         <NavLink to="/ai-chat" className={navLinkClass}>

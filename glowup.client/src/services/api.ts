@@ -3,6 +3,7 @@ import type { Profile, UpdateProfile } from '../types/profile';
 import type { ProfileSection, UpdateProfileSection, SectionType } from '../types/section';
 import type { AiContext } from '../types/aiContext';
 import type { AiChatResponse } from '../types/aiChat';
+import type { CustomSection, CustomSectionInput } from '../types/customSection';
 
 /**
  * Thin fetch wrapper. Centralizes the base URL, JSON headers, and error handling
@@ -81,4 +82,25 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ question }),
     }),
+
+  // --- Custom sections ---
+  getCustomSections: () => request<CustomSection[]>('/api/custom-sections'),
+
+  getCustomSection: (id: string) =>
+    request<CustomSection>(`/api/custom-sections/${id}`),
+
+  createCustomSection: (input: CustomSectionInput) =>
+    request<CustomSection>('/api/custom-sections', {
+      method: 'POST',
+      body: JSON.stringify(input),
+    }),
+
+  updateCustomSection: (id: string, input: CustomSectionInput) =>
+    request<CustomSection>(`/api/custom-sections/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(input),
+    }),
+
+  deleteCustomSection: (id: string) =>
+    request<void>(`/api/custom-sections/${id}`, { method: 'DELETE' }),
 };

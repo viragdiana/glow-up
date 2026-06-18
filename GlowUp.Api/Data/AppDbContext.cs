@@ -35,8 +35,12 @@ public class AppDbContext : DbContext
                   .HasConversion<string>()
                   .HasMaxLength(50);
 
-            // One section per type per profile (MVP: a single section per category).
-            entity.HasIndex(s => new { s.ProfileId, s.SectionType }).IsUnique();
+            // One section per type per profile for the fixed categories.
+            // Custom sections are excluded from the constraint so a profile can
+            // have many of them.
+            entity.HasIndex(s => new { s.ProfileId, s.SectionType })
+                  .IsUnique()
+                  .HasFilter("[SectionType] <> 'Custom'");
         });
     }
 }

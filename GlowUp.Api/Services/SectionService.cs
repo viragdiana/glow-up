@@ -21,12 +21,13 @@ public class SectionService : ISectionService
     {
         var profile = await _profileService.GetOrCreateMainProfileAsync(cancellationToken);
 
-        return await _db.ProfileSections
+        var sections = await _db.ProfileSections
             .AsNoTracking()
             .Where(s => s.ProfileId == profile.Id)
             .OrderBy(s => s.SectionType)
-            .Select(s => MapToDto(s))
             .ToListAsync(cancellationToken);
+
+        return sections.Select(s => s.ToDto()).ToList();
     }
 
     public async Task<ProfileSectionDto?> GetByTypeAsync(SectionType sectionType, CancellationToken cancellationToken = default)
@@ -37,7 +38,7 @@ public class SectionService : ISectionService
             .AsNoTracking()
             .FirstOrDefaultAsync(s => s.ProfileId == profile.Id && s.SectionType == sectionType, cancellationToken);
 
-        return section is null ? null : MapToDto(section);
+        return section?.ToDto();
     }
 
     public async Task<ProfileSectionDto> UpsertByTypeAsync(SectionType sectionType, UpdateProfileSectionDto dto, CancellationToken cancellationToken = default)
@@ -70,20 +71,6 @@ public class SectionService : ISectionService
 
         await _db.SaveChangesAsync(cancellationToken);
 
-        return MapToDto(section);
+        return section.ToDto();
     }
-
-    private static ProfileSectionDto MapToDto(ProfileSection s) => new()
-    {
-        Id = s.Id,
-        ProfileId = s.ProfileId,
-        SectionType = s.SectionType,
-        Title = s.Title,
-        Summary = s.Summary,
-        Notes = s.Notes,
-        ConfidenceLevel = s.ConfidenceLevel,
-        DataJson = s.DataJson,
-        CreatedAt = s.CreatedAt,
-        UpdatedAt = s.UpdatedAt
-    };
 }
