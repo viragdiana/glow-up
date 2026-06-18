@@ -3,6 +3,7 @@ import AppLayout from './layout/AppLayout';
 import DashboardPage from './pages/DashboardPage';
 import SectionPage from './pages/SectionPage';
 import AiContextPreviewPage from './pages/AiContextPreviewPage';
+import AiChatPage from './pages/AiChatPage';
 
 function NotFound() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route index element={<DashboardPage />} />
         <Route path="sections/:sectionType" element={<SectionPage />} />
         <Route path="ai-context" element={<AiContextPreviewPage />} />
+        <Route path="ai-chat" element={<AiChatPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

@@ -2,6 +2,7 @@ import { API_BASE_URL } from './config';
 import type { Profile, UpdateProfile } from '../types/profile';
 import type { ProfileSection, UpdateProfileSection, SectionType } from '../types/section';
 import type { AiContext } from '../types/aiContext';
+import type { AiChatResponse } from '../types/aiChat';
 
 /**
  * Thin fetch wrapper. Centralizes the base URL, JSON headers, and error handling
@@ -73,4 +74,11 @@ export const api = {
 
   // --- AI context preview ---
   getAiContext: () => request<AiContext>('/api/ai-context'),
+
+  // --- AI chat ---
+  sendAiChatQuestion: (question: string) =>
+    request<AiChatResponse>('/api/ai-chat', {
+      method: 'POST',
+      body: JSON.stringify({ question }),
+    }),
 };

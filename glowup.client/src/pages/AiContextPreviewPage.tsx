@@ -31,8 +31,7 @@ export default function AiContextPreviewPage() {
           <span className="page-title-icon">🤖</span> AI Context Preview
         </h2>
         <p className="page-subtitle">
-          This is the plain-text context the app will hand to an AI model later.
-          No AI is called yet.
+          This preview shows the saved profile context used to generate personalized insights.
         </p>
       </div>
 

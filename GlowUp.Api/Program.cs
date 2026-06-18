@@ -28,6 +28,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<ISectionService, SectionService>();
 builder.Services.AddScoped<IAiContextService, AiContextService>();
+builder.Services.AddScoped<IAiChatService, AiChatService>();
+// Mock provider for now; swap for a real AI provider later without touching callers.
+builder.Services.AddScoped<IAiProviderService, MockAiProviderService>();
 
 // --- CORS (prepared for the future React frontend) ---------------------------
 builder.Services.AddCors(options =>

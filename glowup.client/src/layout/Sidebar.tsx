@@ -31,6 +31,10 @@ export default function Sidebar() {
         ))}
 
         <div className="sidebar-group-label">Insights</div>
+        <NavLink to="/ai-chat" className={navLinkClass}>
+          <span className="nav-icon">💬</span>
+          <span>AI Chat</span>
+        </NavLink>
         <NavLink to="/ai-context" className={navLinkClass}>
           <span className="nav-icon">🤖</span>
           <span>AI Context Preview</span>
