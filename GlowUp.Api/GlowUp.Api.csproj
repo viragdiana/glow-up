@@ -18,4 +18,23 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.1" />
   </ItemGroup>
 
+  <!--
+    Publish-time only: build the React client and include its output under
+    wwwroot so `dotnet publish` produces a single self-contained deployable.
+    Hooks ComputeFilesToPublish, so local `dotnet build`/`dotnet run` never run npm.
+    Requires Node.js + npm on the machine doing the publish.
+  -->
+  <Target Name="PublishReactClient" AfterTargets="ComputeFilesToPublish">
+    <Message Importance="high" Text="Building React client (glowup.client) for publish..." />
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)/../glowup.client" Command="npm install" />
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)/../glowup.client" Command="npm run build" />
+    <ItemGroup>
+      <ReactDist Include="$(MSBuildProjectDirectory)/../glowup.client/dist/**/*" />
+      <ResolvedFileToPublish Include="@(ReactDist)" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>wwwroot/%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
 </Project>

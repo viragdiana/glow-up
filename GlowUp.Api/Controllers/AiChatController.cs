@@ -29,6 +29,15 @@ public class AiChatController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Question))
             return BadRequest(new { error = "Question must not be empty." });
 
+        if (request.Question.Length > AiChatRequestDto.MaxQuestionLength)
+            return BadRequest(new
+            {
+                error = $"Question is too long. Please keep it under {AiChatRequestDto.MaxQuestionLength} characters."
+            });
+
+        // The provider layer handles AI errors gracefully (logs + mock fallback),
+        // and the production exception handler shields any other failure, so no
+        // raw error or secret can reach the client.
         var response = await _aiChatService.AskAsync(request, cancellationToken);
         return Ok(response);
     }
