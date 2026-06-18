@@ -30,8 +30,25 @@ builder.Services.AddScoped<ISectionService, SectionService>();
 builder.Services.AddScoped<ICustomSectionService, CustomSectionService>();
 builder.Services.AddScoped<IAiContextService, AiContextService>();
 builder.Services.AddScoped<IAiChatService, AiChatService>();
-// Mock provider for now; swap for a real AI provider later without touching callers.
-builder.Services.AddScoped<IAiProviderService, MockAiProviderService>();
+
+// AI provider selection (config-driven). Both concrete providers are registered;
+// IAiProviderService resolves to Gemini only when configured with a key, otherwise
+// to the mock. The Gemini provider itself also falls back to mock at runtime on error.
+builder.Services.AddScoped<MockAiProviderService>();
+builder.Services.AddScoped<GeminiAiProviderService>();
+builder.Services.AddScoped<IAiProviderService>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var provider = config["AI:Provider"];
+    var apiKey = config["AI:Gemini:ApiKey"];
+
+    var useGemini = string.Equals(provider, "Gemini", StringComparison.OrdinalIgnoreCase)
+                    && !string.IsNullOrWhiteSpace(apiKey);
+
+    return useGemini
+        ? sp.GetRequiredService<GeminiAiProviderService>()
+        : sp.GetRequiredService<MockAiProviderService>();
+});
 
 // --- CORS (prepared for the future React frontend) ---------------------------
 builder.Services.AddCors(options =>
